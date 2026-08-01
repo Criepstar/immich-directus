@@ -1,0 +1,40 @@
+services:
+  directus:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - '8055:8055'
+    environment:
+      KEY: '${DIRECTUS_KEY}'
+      SECRET: '${DIRECTUS_SECRET}'
+      ADMIN_EMAIL: '${DIRECTUS_ADMIN_EMAIL}'
+      ADMIN_PASSWORD: '${DIRECTUS_ADMIN_PASSWORD}'
+      PUBLIC_URL: '${DIRECTUS_PUBLIC_URL}'
+      DB_CLIENT: 'pg'
+      DB_HOST: 'postgres'
+      DB_PORT: '5432'
+      DB_DATABASE: '${POSTGRES_DB}'
+      DB_USER: '${POSTGRES_USER}'
+      DB_PASSWORD: '${POSTGRES_PASSWORD}'
+      IMMICH_URL: '${IMMICH_URL}'
+      IMMICH_API_KEY: '${IMMICH_API_KEY}'
+    volumes:
+      - directus-uploads:/directus/uploads
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: '${POSTGRES_DB}'
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  directus-uploads:
+  postgres-data:
