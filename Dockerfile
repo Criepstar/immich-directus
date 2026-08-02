@@ -2,6 +2,7 @@
 FROM node:20 AS ext-builder
 WORKDIR /build
 RUN npm install directus-extension-immich
+RUN npm install directus-extension-slug-generator
 
 # Stage 2: the actual Directus image, just copy the built extension in
 FROM directus/directus:latest
